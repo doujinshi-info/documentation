@@ -1,0 +1,1973 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Doujinshi.info API</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="all.js" type="text/javascript"></script>
+
+    <script>
+      $(function() {
+        var langs = [];
+
+          langs.push("shell");
+
+        setupLanguages(langs);
+      });
+    </script>
+  </head>
+
+  <body class="index">
+    <a href="#" id="nav-button">
+      <span>NAV<img src="navbar.png" /></span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="logo.png" />
+        <div class="lang-selector">
+          <a href="#" data-language-name="shell"> cURL</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc"></div>
+      <ul class="toc-footer">
+      </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+        <div class="content">
+          <h1 id="introduction">Introduction</h1>
+<p>Welcome to the Doujinshi.info REST API. You can use our API to access Doujinshi.info API endpoints, which can provide information on various Japanese doujinshi in our database.</p>
+<h1 id="authentication">Authentication</h1>
+<h2 id="registration">Registration</h2>
+<p>Create a new user account.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/auth/create"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "name": "Kisuka",
+    "email": "kisuka@doujinshi.info",
+    "password": "secret",
+    "password_confirmation": "secret"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Reponse example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">access_token</span>": <span class="hljs-value"><span class="hljs-string">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ1NjM0LCJleHAiOjE1MzYwNDY1MzQsInN1YiI6IkxZQW40bDdMbUdsaiIsIm5hbWUiOiJLaXN1a2EyMiIsInNsdWciOiJraXN1a2EyMiIsImlzX2FkbWluIjpmYWxzZSwiaXNfbW9kIjpmYWxzZX0.uZP2M-x3RzUO3J2WOKMP7bumDT8-_G1MDHERqyiz3SI"</span></span>,
+  "<span class="hljs-attribute">refresh_token</span>": <span class="hljs-value"><span class="hljs-string">"30d3ee954db60ce30bde51d3f88e9f9a9ae97eb4a4d723bd7d88985994f1e414"</span>
+</span>}
+</code></pre>
+<p><code>POST https://api.doujinshi.info/v1/auth/create</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s desired profile name.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s email address.</td>
+</tr>
+<tr>
+<td>password</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s secure password.</td>
+</tr>
+<tr>
+<td>password_confirmation</td>
+<td>string</td>
+<td>Required</td>
+<td>The confirmation for the password.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="login">Login</h2>
+<p>Login to receive an access token and refresh token. The access token is used to interacte with protected endpoints. The refresh token is used to create new access tokens.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/auth/login"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "email": "kisuka@doujinshi.info",
+    "password": "secret"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Reponse example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">access_token</span>": <span class="hljs-value"><span class="hljs-string">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ1ODY5LCJleHAiOjE1MzYwNDY3NjksInN1YiI6IkxZQW40bDdMbUdsaiIsIm5hbWUiOiJLaXN1a2EyMiIsInNsdWciOiJraXN1a2EyMiIsImlzX2FkbWluIjpmYWxzZSwiaXNfbW9kIjpmYWxzZX0.jP4ebJwd1bifVNO5YOL1ztx90OPG-YLKnmgpBxtVkjo"</span></span>,
+  "<span class="hljs-attribute">refresh_token</span>": <span class="hljs-value"><span class="hljs-string">"30d3ee954db60ce30bde51d3f88e9f9a9ae97eb4a4d723bd7d88985994f1e414"</span>
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/auth/login</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>email</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s email address attached to their account.</td>
+</tr>
+<tr>
+<td>password</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s secure password.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="refresh-token">Refresh Token</h2>
+<p>As a security method, all access tokens expire after 15 minutes. Access tokens are only to be used for short operations and will need to be refreshed. A user&#39;s refresh token can be used to generate a new access token once it has expired.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/auth/login"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "user": "RZe14xe6YAba",
+    "refresh_token": "30d3ee954db60ce30bde51d3f88e9f9a9ae97eb4a4d723bd7d88985994f1e414"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Reponse example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">access_token</span>": <span class="hljs-value"><span class="hljs-string">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ1ODY5LCJleHAiOjE1MzYwNDY3NjksInN1YiI6IkxZQW40bDdMbUdsaiIsIm5hbWUiOiJLaXN1a2EyMiIsInNsdWciOiJraXN1a2EyMiIsImlzX2FkbWluIjpmYWxzZSwiaXNfbW9kIjpmYWxzZX0.jP4ebJwd1bifVNO5YOL1ztx90OPG-YLKnmgpBxtVkjo"</span>
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/auth/login</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s ID hash.</td>
+</tr>
+<tr>
+<td>refresh_token</td>
+<td>hash</td>
+<td>Required</td>
+<td>The user&#39;s secure refresh token.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="logout">Logout</h2>
+<p>Blacklist the user&#39;s refresh token so that it can no longer be used to generate new access tokens.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/auth/logout"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ1ODY5LCJleHAiOjE1MzYwNDY3NjksInN1YiI6IkxZQW40bDdMbUdsaiIsIm5hbWUiOiJLaXN1a2EyMiIsInNsdWciOiJraXN1a2EyMiIsImlzX2FkbWluIjpmYWxzZSwiaXNfbW9kIjpmYWxzZX0.jP4ebJwd1bifVNO5YOL1ztx90OPG-YLKnmgpBxtVkjo'</span> \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "user": "RZe14xe6YAba",
+    "refresh_token": "30d3ee954db60ce30bde51d3f88e9f9a9ae97eb4a4d723bd7d88985994f1e414"
+  }'</span>
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/auth/logout</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user</td>
+<td>string</td>
+<td>Required</td>
+<td>The user&#39;s ID hash.</td>
+</tr>
+<tr>
+<td>refresh_token</td>
+<td>hash</td>
+<td>Required</td>
+<td>The user&#39;s secure refresh token.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="pagination">Pagination</h1>
+<p>All <code>GET</code> endpoints that return an object list support cursor based pagination. To make things easier, any paginated results provide a constructed call to the next page via the <code>next_page_url</code> value.</p>
+<p>The default <code>limit</code> parameter is set to 24 can be raised up to 100.</p>
+<p>The results are ordered in descending order of creation date.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag?page=1&amp;limit=24"</span>
+</code></pre>
+<blockquote>
+<p>Reponse example</p>
+</blockquote>
+<pre><code class="highlight json">{
+   "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">344</span></span>,
+      "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+      "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">15</span></span>,
+      "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/tag?page=2"</span>
+   </span>}</span>,
+   "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+      ...
+   ]
+</span>}
+</code></pre>
+<h3 id="query-parameters">Query Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>page</td>
+<td>1</td>
+<td>Specifies which page to return.</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>24</td>
+<td>Number of results to return per page, limited up to 100.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="tags">Tags</h1>
+<h2 id="get-all-tag-categories">Get All Tag Categories</h2>
+<p>Returns a list of all the tag types that are available in the database. Each of these types have a large number of tags categorized within them.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag/types"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+       "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my24XqGN"</span></span>,
+       "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"芸術家"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"geijutsuka"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Artist"</span>
+       </span>}</span>,
+       "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"artist"</span>
+    </span>}
+    ...
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/tag/types</code></p>
+<h2 id="get-all-tags">Get All Tags</h2>
+<p>Returns a list of tags present within the database. This list is displays the most recent tags first.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/tag?page=2"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"lEJgmWe76vWz"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"oWYqmql9lJPj"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"シリーズ"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"shirizu"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Series"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"series"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"ギルティクラウン"</span></span>,
+        "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Girutei Kuraun"</span></span>,
+        "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Guilty Crown"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"girutei-kuraun"</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:03"</span></span>,
+      "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:03"</span>
+    </span>}
+  ]
+</span>}
+</code></pre>
+<p>This endpoint retrieves all tags.</p>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/tag</code></p>
+<h2 id="get-all-tags-by-category">Get All Tags By Category</h2>
+<p>Returns a list of tags categorized into a specific tag type. The list is in newest to oldest order.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag/content"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+   "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+      "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/tag/content?page=2"</span>
+   </span>}</span>,
+   "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+      {
+         "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"NXE4RgK26nj7"</span></span>,
+         "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+            "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+               "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"コンテンツ"</span></span>,
+               "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"kontentsu"</span></span>,
+               "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Content"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"content"</span>
+         </span>}</span>,
+         "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"アヘ顔"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Ahegao"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">""</span>
+         </span>}</span>,
+         "<span class="hljs-attribute">aliases</span>": <span class="hljs-value">[
+            <span class="hljs-string">"Acme Face"</span>
+         ]</span>,
+         "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"ahegao"</span></span>,
+         "<span class="hljs-attribute">description</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">""</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">""</span></span>,
+         }</span>,
+         "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-11-20 09:21:15"</span></span>,
+         "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-12-24 21:07:48"</span>
+      </span>}
+   ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/tag/{type}</code></p>
+<h2 id="get-specific-tag">Get Specific Tag</h2>
+<p>Returns information regarding a specific tag. Also includes doujinshi that are tagged with the tag.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag/series/naruto"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my1emXqG"</span></span>,
+    "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+       "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"oWYqmql9lJPj"</span></span>,
+       "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"シリーズ"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Shirizu"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Series"</span>
+       </span>}</span>,
+       "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"series"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+       "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+       "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+       "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"naruto"</span></span>,
+    "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+    "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+    "<span class="hljs-attribute">books</span>":<span class="hljs-value">{
+       "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+          "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+          "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+          "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+          "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/tag/series/naruto?page=2"</span>
+       </span>}</span>,
+       "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+          {
+            "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+            "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+              "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+              "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+              "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+            "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+            "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+            "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+            "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+            "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+            "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+            "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+            "<span class="hljs-attribute">links</span>":<span class="hljs-value">{
+              "<span class="hljs-attribute">toranoana</span>":<span class="hljs-value"><span class="hljs-string">"http://www.toranoana.jp/mailorder/article/04/0010/10/50/040010105014.html"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/rkKSl48FjbY5G6diUhu5trSn.jpg"</span></span>,
+            "<span class="hljs-attribute">samples</span>":<span class="hljs-value">[
+              <span class="hljs-string">"https://cdn.doujinshi.info/images/Jb8i7Ls1l0QyJPpqcgI648Bm.jpg"</span>,
+              <span class="hljs-string">"https://cdn.doujinshi.info/images/CFbba5HeKNu7M5MI2CnymIMX.jpg"</span>
+            ]</span>,
+            "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+            "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-12-28 11:53:49"</span>
+          </span>}
+       ]
+    </span>}
+  </span>}
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/tag/{category}/{tag}</code></p>
+<h2 id="get-tag-s-changelog">Get Tag&#39;s Changelog</h2>
+<p>Returns a list of changes made to a specific tag.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag/artist/hisashi-utage/changelog"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"J5KBm800mEPp"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"create"</span></span>,
+      "<span class="hljs-attribute">user</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">book</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+      "<span class="hljs-attribute">tag</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"8po9japv6EPg"</span></span>,
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my24XqGN"</span></span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"芸術家"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"geijutsuka"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Artist"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"artist"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"寿宴"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Hisashi Utage"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"hisashi-utage"</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-24 08:49:14"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-24 08:49:14"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">transaction_id</span>":<span class="hljs-value"><span class="hljs-string">"dpK9eVxDm5jo"</span></span>,
+      "<span class="hljs-attribute">amount</span>":<span class="hljs-value"><span class="hljs-number">33</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-24 08:49:14"</span>
+    </span>}
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/tag/{category}/{tag}/changelog</code></p>
+<h2 id="create-tag">Create Tag</h2>
+<p>Creates a new tag within the database that can be used to tag doujinshi.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "type": "convention",
+    "name_japanese": "コミックマーケット 84"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"Jyp4oapa9271"</span></span>,
+  "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"LYAn4lL4Gljz"</span></span>,
+    "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"イベント"</span></span>,
+      "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"ibento"</span></span>,
+      "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Convention"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"convention"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"コミックマーケット 84"</span></span>,
+    "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"komikkumaketto 84"</span></span>,
+    "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"komikkumaketto-84"</span></span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 20:05:39"</span></span>,
+  "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 20:05:39"</span></span>,
+  "<span class="hljs-attribute">tags</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+  </span>}</span>,
+  "<span class="hljs-attribute">books</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">0</span></span>,
+        "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+        "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+        "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+        "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+  </span>}
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/tag</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>Required</td>
+<td>The unique ID of the tag type.</td>
+</tr>
+<tr>
+<td>name_japanese</td>
+<td>string</td>
+<td>Required</td>
+<td>The original Japanese spelling of the tag name.</td>
+</tr>
+<tr>
+<td>name_romaji</td>
+<td>string</td>
+<td>Optional</td>
+<td>The romanized version of the Japanese name. This will be generated automatically if not set.</td>
+</tr>
+<tr>
+<td>name_english</td>
+<td>string</td>
+<td>Optional</td>
+<td>The english translated version of the Japanese name.</td>
+</tr>
+<tr>
+<td>aliases</td>
+<td>array</td>
+<td>Optional</td>
+<td>Any alternative names or aliases.</td>
+</tr>
+<tr>
+<td>description_english</td>
+<td>string</td>
+<td>Optional</td>
+<td>English description of the tag, mostly used for content tags.</td>
+</tr>
+<tr>
+<td>description_japanese</td>
+<td>string</td>
+<td>Optional</td>
+<td>Japanese description of the tag, mostly used for content tags.</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>string</td>
+<td>Optional</td>
+<td>The start date of a convention tag.</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>string</td>
+<td>Optional</td>
+<td>The end date of a convention tag.</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>array</td>
+<td>Optional</td>
+<td>Child tags that belong to this tag. Such as characters under a series or artists under a circle.</td>
+</tr>
+<tr>
+<td>links</td>
+<td>array</td>
+<td>Optional</td>
+<td>Links to pixiv, twitter, and other various social media.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="update-tag">Update Tag</h2>
+<p>Updates the information on an existing tag. Parameters that are not passed will be removed from the existing records. For example, if a tag has a name_english field filled out currently but null is passed for name_english during an update, then it&#39;ll be removed.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/tag/convention/84"</span> \
+  -X PUT \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "name_japanese": "コミックマーケット 84",
+    "name_romaji": "Komikku Maketto 84",
+    "name_english": "Comic Market 84"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"Jyp4oapa9271"</span></span>,
+  "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"LYAn4lL4Gljz"</span></span>,
+    "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"イベント"</span></span>,
+      "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"ibento"</span></span>,
+      "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Convention"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"convention"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"コミックマーケット 84"</span></span>,
+    "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Komikku Maketto 84"</span></span>,
+    "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Comic Market 84"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"komikkumaketto-84"</span></span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 20:05:39"</span></span>,
+  "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 20:06:59"</span></span>,
+  "<span class="hljs-attribute">tags</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+  </span>}</span>,
+  "<span class="hljs-attribute">books</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+      "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+  </span>}
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>PUT https://api.doujinshi.info/v1/tag/{type}/{slug}</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name_japanese</td>
+<td>string</td>
+<td>Required</td>
+<td>The original Japanese spelling of the tag name.</td>
+</tr>
+<tr>
+<td>name_romaji</td>
+<td>string</td>
+<td>Optional</td>
+<td>The romanized version of the Japanese name. This will be generated automatically if not set.</td>
+</tr>
+<tr>
+<td>name_english</td>
+<td>string</td>
+<td>Optional</td>
+<td>The english translated version of the Japanese name.</td>
+</tr>
+<tr>
+<td>aliases</td>
+<td>array</td>
+<td>Optional</td>
+<td>Any alternative names or aliases.</td>
+</tr>
+<tr>
+<td>description_english</td>
+<td>string</td>
+<td>Optional</td>
+<td>English description of the tag, mostly used for content tags.</td>
+</tr>
+<tr>
+<td>description_japanese</td>
+<td>string</td>
+<td>Optional</td>
+<td>Japanese description of the tag, mostly used for content tags.</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>string</td>
+<td>Optional</td>
+<td>The start date of a convention tag.</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>string</td>
+<td>Optional</td>
+<td>The end date of a convention tag.</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>array</td>
+<td>Optional</td>
+<td>Child tags that belong to this tag. Such as characters under a series or artists under a circle.</td>
+</tr>
+<tr>
+<td>links</td>
+<td>array</td>
+<td>Optional</td>
+<td>Links to pixiv, twitter, and other various social media.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="doujinshi">Doujinshi</h1>
+<h2 id="get-all-doujinshi">Get All Doujinshi</h2>
+<p>Returns a list of the doujinshi present within the database. Ordered from newest to oldest.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/book"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">344</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">15</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/book?page=2"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"LYAn4lRD9Glj"</span></span>,
+      "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PM GALS!"</span></span>,
+        "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PM GALS!"</span></span>,
+        "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">""</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"pm-gals"</span></span>,
+      "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2004-08-15"</span></span>,
+      "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">64</span></span>,
+      "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">1300</span></span>,
+      "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+      "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/vhU2FmT3OPO9pr7Y45w0lv8g.jpg"</span></span>,
+      "<span class="hljs-attribute">samples</span>":<span class="hljs-value">[
+        <span class="hljs-string">"https://cdn.doujinshi.info/images/pJVfO5SWs31BBy1dVP3Bbo31.jpg"</span>,
+        <span class="hljs-string">"https://cdn.doujinshi.info/images/Xhuh4LBE3Q74CLRKkeWxWgNV.jpg"</span>
+      ]</span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 02:17:41"</span></span>,
+      "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 02:17:41"</span>
+    </span>}
+    ...
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/book</code></p>
+<h2 id="get-specific-doujinshi">Get Specific Doujinshi</h2>
+<p>Returns detailed information about a specific doujinshi.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/book/parm-special-02-in-nin-shugyou"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+  "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+    "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+    "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+  "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+  "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+  "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+  "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+  "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">links</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">toranoana</span>":<span class="hljs-value"><span class="hljs-string">"http://www.toranoana.jp/mailorder/article/04/0010/10/50/040010105014.html"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/rkKSl48FjbY5G6diUhu5trSn.jpg"</span></span>,
+  "<span class="hljs-attribute">samples</span>":<span class="hljs-value">[
+    <span class="hljs-string">"https://cdn.doujinshi.info/images/Jb8i7Ls1l0QyJPpqcgI648Bm.jpg"</span>,
+    <span class="hljs-string">"https://cdn.doujinshi.info/images/CFbba5HeKNu7M5MI2CnymIMX.jpg"</span>
+  ]</span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+  "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-12-28 11:53:49"</span></span>,
+  "<span class="hljs-attribute">tags</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+      {
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"GA7D9Jdp4yXk"</span></span>,
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my24XqGN"</span></span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"芸術家"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Geijutsuka"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Artist"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"artist"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"寿宴"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Hisashi Utage"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kotobuki-utage"</span></span>,
+        "<span class="hljs-attribute">links</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">pixiv</span>":<span class="hljs-value"><span class="hljs-string">"http://www.pixiv.net/member.php?id=862500"</span></span>,
+          "<span class="hljs-attribute">homepage</span>":<span class="hljs-value"><span class="hljs-string">"http://studioparm.com"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:43"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:43"</span>
+      </span>},
+      {
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"DdpK9e7o45jo"</span></span>,
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"lJyp4obm271L"</span></span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"サークル"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Sakuru"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Circle"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"circle"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"Studio★ParM"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"StudioParM"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"studio-parm"</span></span>,
+        "<span class="hljs-attribute">links</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">homepage</span>":<span class="hljs-value"><span class="hljs-string">"http://studioparm.com"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span>
+      </span>},
+      {
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my1emXqG"</span></span>,
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"oWYqmql9lJPj"</span></span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"シリーズ"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Shirizu"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Series"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"series"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"naruto"</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span>
+      </span>}
+    ]
+  </span>}
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/book/{slug}</code></p>
+<h2 id="get-doujinshi-s-changelog">Get Doujinshi&#39;s Changelog</h2>
+<p>Returns a list of changes that have occurred to a specific doujinshi entry.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/book/parm-special-02-in-nin-shugyou/changelog"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"R8AZ4Go24vWw"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"update"</span></span>,
+      "<span class="hljs-attribute">user</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">book</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+        "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+        "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+        "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+        "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+        "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">tag</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+      "<span class="hljs-attribute">transaction_id</span>":<span class="hljs-value"><span class="hljs-string">"kQamKkDPmXg1"</span></span>,
+      "<span class="hljs-attribute">amount</span>":<span class="hljs-value"><span class="hljs-number">10</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+    </span>}
+    ...
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/book/{slug}/changelog</code></p>
+<h2 id="create-doujinshi">Create Doujinshi</h2>
+<p>Adds a doujinshi to the database.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/book"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDM5NzgzLCJleHAiOjE1MzYwNDA2ODMsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.mE3z8HLWR0ZAdKQqAssOifkMEbI5j9GkUZV9kV1Qc_s'</span> \
+  -H <span class="hljs-string">'Content-Type: multipart/form-data; charset=utf-8'</span> \
+  -F <span class="hljs-string">'name_japanese=PSM・2淫忍修行'</span> \
+  -F <span class="hljs-string">'name_romaji=PSM2 In Nin Shugyou'</span> \
+  -F <span class="hljs-string">'date_released=2018-09-03'</span> \
+  -F <span class="hljs-string">'price=858'</span> \
+  -F <span class="hljs-string">'is_adult=true'</span> \
+  -F <span class="hljs-string">'cover=@/y/git/doujinshi/docs/dist/logo.png'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"3RVKmpnA6dLb"</span></span>,
+  "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+    "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+    "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"psm2-in-nin-shugyou"</span></span>,
+  "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03"</span></span>,
+  "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+  "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-string">"858"</span></span>,
+  "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+  "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 21:12:38"</span></span>,
+  "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 21:12:38"</span></span>,
+  "<span class="hljs-attribute">tags</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+  </span>}</span>,
+  "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/2018-09-03/xqgCZX7Gsnp3cU-cover.jpg"</span>
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/book</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name_japanese</td>
+<td>string</td>
+<td>Required</td>
+<td>The original Japanese title of the book.</td>
+</tr>
+<tr>
+<td>name_romaji</td>
+<td>string</td>
+<td>Optional</td>
+<td>The romanized version of the Japanese title.</td>
+</tr>
+<tr>
+<td>name_english</td>
+<td>string</td>
+<td>Optional</td>
+<td>Any popularized english translated title of the work.</td>
+</tr>
+<tr>
+<td>date_released</td>
+<td>string</td>
+<td>Optional</td>
+<td>The date the book was released.</td>
+</tr>
+<tr>
+<td>pages</td>
+<td>integer</td>
+<td>Optional</td>
+<td>The amount of pages contained in the book.</td>
+</tr>
+<tr>
+<td>price</td>
+<td>integer</td>
+<td>Optional</td>
+<td>The price of the book in Japanese Yen.</td>
+</tr>
+<tr>
+<td>is_copybook</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>If the book is a copybook or not.</td>
+</tr>
+<tr>
+<td>is_anthology</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>If the book is an anthology or not.</td>
+</tr>
+<tr>
+<td>is_adult</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>If the book features 18+ content or not.</td>
+</tr>
+<tr>
+<td>is_novel</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>If the book is a novel or not.</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>array</td>
+<td>Optional</td>
+<td>The unique IDs of various tags associated with the work. Such as artists, circles, series, etc.</td>
+</tr>
+<tr>
+<td>links</td>
+<td>array</td>
+<td>Optional</td>
+<td>Links to Toranoana, Melon Books, and various places to purchase the work.</td>
+</tr>
+<tr>
+<td>cover</td>
+<td>image</td>
+<td>Optional</td>
+<td>An image of the cover art of the work.</td>
+</tr>
+<tr>
+<td>samples</td>
+<td>array</td>
+<td>Optional</td>
+<td>Sample pages from the work.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="update-doujinshi">Update Doujinshi</h2>
+<p>Updates an existing doujinshi in the database. Passing either the <code>cover</code> or <code>samples</code> arguments will replace the current images.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/book/psm2-in-nin-shugyou"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ1MjIwLCJleHAiOjE1MzYwNDYxMjAsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.xg5Clb3RDzvH8ihzCVtb7dayrzt0ZFYr59j8MZKf1sQ'</span> \
+  -H <span class="hljs-string">'Content-Type: multipart/form-data; charset=utf-8'</span> \
+  -F <span class="hljs-string">'name_japanese=PSM・2淫忍修行'</span> \
+  -F <span class="hljs-string">'name_romaji=PSM2 In Nin Shugyou'</span> \
+  -F <span class="hljs-string">'date_released=2018-09-03'</span> \
+  -F <span class="hljs-string">'price=858'</span> \
+  -F <span class="hljs-string">'is_adult=true'</span> \
+  -F <span class="hljs-string">'links[toranoana]=http://www.toranoana.jp/mailorder/article/04/0010/10/50/040010105014.html'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"3RVKmpnA6dLb"</span></span>,
+  "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+    "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+    "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"psm2-in-nin-shugyou"</span></span>,
+  "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03"</span></span>,
+  "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-string">"24"</span></span>,
+  "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-string">"858"</span></span>,
+  "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+  "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 21:12:38"</span></span>,
+  "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-09-03 21:12:38"</span></span>,
+  "<span class="hljs-attribute">tags</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+  </span>}</span>,
+  "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/2018-09-03/xqgCZX7Gsnp3cU-cover.jpg"</span></span>,
+  "<span class="hljs-attribute">links</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">toranoana</span>":<span class="hljs-value"><span class="hljs-string">"http://www.toranoana.jp/mailorder/article/04/0010/10/50/040010105014.html"</span>
+  </span>}
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>PUT https://api.doujinshi.info/v1/import</code></p>
+<h2 id="import-doujinshi">Import Doujinshi</h2>
+<p>As a quick way of adding doujinshi objects to the database, a spider can be initialized to crawl a Toranoana or Melonbooks listing. Submitting a link to the import endpoint will queue up a crawling job. If the doujinshi already exists, it will not import it.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/import"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  -H <span class="hljs-string">'Content-Type: application/json'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "url":"https://www.melonbooks.co.jp/detail/detail.php?product_id=402515"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{"<span class="hljs-attribute">data</span>":<span class="hljs-value"><span class="hljs-string">"import_success"</span></span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/import</code></p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>Required</td>
+<td>The URL of the Toranoana or Melonbooks listing.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="changelog">Changelog</h1>
+<h2 id="get-all-changes">Get All Changes</h2>
+<p>Get a list of the recent changes to all tags and doujinshi in the databse.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/changelog"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">8</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-string">"1"</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">8</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/changelog?page=2"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"R8AZ4Go24vWw"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"update"</span></span>,
+      "<span class="hljs-attribute">user</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">book</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+        "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+        "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+        "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+        "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+        "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">tag</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+      "<span class="hljs-attribute">transaction_id</span>":<span class="hljs-value"><span class="hljs-string">"kQamKkDPmXg1"</span></span>,
+      "<span class="hljs-attribute">amount</span>":<span class="hljs-value"><span class="hljs-number">10</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+    </span>}
+    ...
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/changelog</code></p>
+<h2 id="get-specific-change">Get Specific Change</h2>
+<p>Returns a list of detailed differences of a specific changelog entry.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/changelog/R8AZ4Go24vWw"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"R8AZ4Go24vWw"</span></span>,
+  "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"update"</span></span>,
+  "<span class="hljs-attribute">user</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+    "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">book</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+    "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+      "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+      "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+    "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+    "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+    "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+    "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+    "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">tag</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+  "<span class="hljs-attribute">transaction_id</span>":<span class="hljs-value"><span class="hljs-string">"kQamKkDPmXg1"</span></span>,
+  "<span class="hljs-attribute">amount</span>":<span class="hljs-value"><span class="hljs-number">10</span></span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span></span>,
+  "<span class="hljs-attribute">changelog</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+      {
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"book"</span></span>,
+        "<span class="hljs-attribute">column</span>":<span class="hljs-value"><span class="hljs-string">"tag_id"</span></span>,
+        "<span class="hljs-attribute">old_value</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+        "<span class="hljs-attribute">new_value</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"J5KBm85A4EPp"</span></span>,
+          "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"PBRN40y60nZQ"</span></span>,
+            "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+              "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"キャラクター"</span></span>,
+              "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Kyarakuta"</span></span>,
+              "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Character"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"character"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"日向ヒナタ"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Hyuuga hinata"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"hyuuga-hinata"</span></span>,
+          "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+          "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span>
+        </span>}
+      </span>},
+      {
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"book"</span></span>,
+        "<span class="hljs-attribute">column</span>":<span class="hljs-value"><span class="hljs-string">"tag_id"</span></span>,
+        "<span class="hljs-attribute">old_value</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+        "<span class="hljs-attribute">new_value</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"PBRN40Pr40nZ"</span></span>,
+          "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"PBRN40y60nZQ"</span></span>,
+            "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+              "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"キャラクター"</span></span>,
+              "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"kyarakuta"</span></span>,
+              "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Character"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"character"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"犬塚キバ"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Inutsuka kiba"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"inuzuka-kiba"</span></span>,
+          "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:45"</span></span>,
+          "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:45"</span>
+        </span>}
+      </span>},
+      {
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"book"</span></span>,
+        "<span class="hljs-attribute">column</span>":<span class="hljs-value"><span class="hljs-string">"tag_id"</span></span>,
+        "<span class="hljs-attribute">old_value</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+        "<span class="hljs-attribute">new_value</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nVy6jYB"</span></span>,
+          "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"PBRN40y60nZQ"</span></span>,
+            "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+              "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"キャラクター"</span></span>,
+              "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"kyarakuta"</span></span>,
+              "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Character"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"character"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"赤丸"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Akamaru"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"akamaru"</span></span>,
+          "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:46"</span></span>,
+          "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:46"</span>
+        </span>}
+      </span>}
+    ]
+  </span>}
+</span>}
+
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/changelog/{id}</code></p>
+<h1 id="search">Search</h1>
+<h2 id="search-doujinshi">Search Doujinshi</h2>
+<p>Queries the entire database for doujinshi featuring the keywords specified. Query parameters can also be included to further filter the results.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/search?q=naruto"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+   "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+      "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">90</span></span>,
+      "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+      "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">4</span></span>,
+      "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/search?q=naruto&amp;page=2"</span>
+   </span>}</span>,
+   "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+      {
+         "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+         "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+         </span>}</span>,
+         "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+         "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+         "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+         "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+         "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+         "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+         "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+         "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+         "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+         "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-08-25 03:18:08"</span></span>,
+         "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/rkKSl48FjbY5G6diUhu5trSn.jpg"</span>
+      </span>}
+   ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/search</code></p>
+<h3 id="query-parameters">Query Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>q</td>
+<td>string</td>
+<td>Required</td>
+<td>The search query</td>
+</tr>
+<tr>
+<td>copybook</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>Filter if the results should contain only copybooks or not.</td>
+</tr>
+<tr>
+<td>anthology</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>Filter if the results should contain only anthologies or not.</td>
+</tr>
+<tr>
+<td>adult</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>Filter if the results should contain only 18+ content or not.</td>
+</tr>
+<tr>
+<td>novel</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>Filter if the results should contain only novels or not.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="search-tags">Search Tags</h2>
+<p>Queries the database for tags featuring the specified keywords.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/search/tag/series?q=naruto"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my1emXqG"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"oWYqmql9lJPj"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"シリーズ"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Shirizu"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Series"</span>
+        </span>}</span>,
+      "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"series"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+        "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+        "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"naruto"</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+      "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+      "<span class="hljs-attribute">tags</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">data</span>":<span class="hljs-value">[]
+      </span>}
+    </span>}
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/search/tag/{type}</code></p>
+<h3 id="query-parameters">Query Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>q</td>
+<td>string</td>
+<td>Required</td>
+<td>The search query</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reverse-image-search">Reverse Image Search</h2>
+<h1 id="users">Users</h1>
+<h2 id="get-specific-user">Get Specific User</h2>
+<p>Returns public information about a specific user.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/kisuka"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"RZe14xe6YAba"</span></span>,
+  "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+  "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span></span>,
+  "<span class="hljs-attribute">collection</span>":<span class="hljs-value"><span class="hljs-number">3</span></span>,
+  "<span class="hljs-attribute">wishlist</span>":<span class="hljs-value"><span class="hljs-number">2</span></span>,
+  "<span class="hljs-attribute">estimated_cost</span>":<span class="hljs-value"><span class="hljs-number">1639</span></span>,
+  "<span class="hljs-attribute">contributions</span>":<span class="hljs-value"><span class="hljs-number">11</span></span>,
+  "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:21:26"</span>
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/user/{slug}</code></p>
+<h2 id="get-user-s-contributions">Get User&#39;s Contributions</h2>
+<p>Returns a list of a user&#39;s contributions to the database such as new entries and modifications.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/kisuka/contributions"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">8</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-string">"1"</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">8</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-string">"https://api.doujinshi.info/v1/user/kisuka/contributions?page=2"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"R8AZ4Go24vWw"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"update"</span></span>,
+      "<span class="hljs-attribute">user</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">book</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"OMbP6nM4jYBn"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"parm-special-02-in-nin-shugyou"</span></span>,
+        "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2006-08-11"</span></span>,
+        "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+        "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">858</span></span>,
+        "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+        "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 01:35:37"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">tag</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+      "<span class="hljs-attribute">transaction_id</span>":<span class="hljs-value"><span class="hljs-string">"kQamKkDPmXg1"</span></span>,
+      "<span class="hljs-attribute">amount</span>":<span class="hljs-value"><span class="hljs-number">10</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-07-28 07:40:34"</span>
+    </span>}
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/user/{user}/contributions</code></p>
+<h2 id="update-settings">Update Settings</h2>
+<h1 id="user-libraries">User Libraries</h1>
+<h2 id="get-user-s-library">Get User&#39;s Library</h2>
+<p>Returns a list of doujinshi within a user&#39;s <code>collection</code> or <code>wishlist</code>.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/kisuka/library/collection"</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"lJyp4oPa6271"</span></span>,
+      "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"プラグスーツ・フェチ総集編"</span></span>,
+        "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"Puragusutsu Fechi Soushuuhen"</span></span>,
+        "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Plug Suit Fetish Omnibus"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"puragusutsu-fechi-soushuuhen"</span></span>,
+      "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2008-12-30"</span></span>,
+      "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-number">232</span></span>,
+      "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-number">1500</span></span>,
+      "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+      "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/tM3bjC3agcb8zbLHrjicAlJl.jpg"</span></span>,
+      "<span class="hljs-attribute">samples</span>":<span class="hljs-value">[
+        <span class="hljs-string">"https://cdn.doujinshi.info/images/v6F6wDFZuGpwfW3Eg90aiaey.jpg"</span>,
+        <span class="hljs-string">"https://cdn.doujinshi.info/images/8hh9xq9LX9BcgPPnvLGkod3v.jpg"</span>
+      ]</span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 02:17:31"</span></span>,
+      "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-30 02:17:31"</span>
+    </span>}
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/user/{user}/library/{type}</code></p>
+<h2 id="check-library-entry">Check Library Entry</h2>
+<p>Checks if a specific book object is present within the authenticated user&#39;s library.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/library/collection/lJyp4oPa6271"</span> \
+  -X GET \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span>
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/library/{type}/{book}</code></p>
+<h2 id="add-library-entry">Add Library Entry</h2>
+<p>Adds a book object to the user&#39;s library of choice.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/library/wishlist"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "book": "lJyp4oPa6271"
+  }'</span>
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/library/{type}</code></p>
+<h2 id="remove-library-entry">Remove Library Entry</h2>
+<p>Removes an existing book object from the user&#39;s library.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/library/wishlist"</span> \
+  -X DELETE \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "book": "lJyp4oPa6271"
+  }'</span>
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>DELETE https://api.doujinshi.info/v1/library/{type}</code></p>
+<h1 id="followed-tags">Followed Tags</h1>
+<h2 id="get-user-s-followed-tags">Get User&#39;s Followed Tags</h2>
+<p>Gets a list of tags that the user is currently following.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/user/kisuka/following"</span> \
+  -X GET \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my1emXqG"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"oWYqmql9lJPj"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"シリーズ"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"shirizu"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Series"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"series"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+        "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+        "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"naruto"</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+      "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span>
+    </span>}
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/user/{user}/following</code></p>
+<h2 id="check-followed-tag">Check Followed Tag</h2>
+<p>Checks if a user is currently following a tag or not.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/following/Jyp4oapa9271"</span> \
+  -X GET \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{"<span class="hljs-attribute">data</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/following/{tag}</code></p>
+<h2 id="follow-tag">Follow Tag</h2>
+<p>Adds a tag to the user&#39;s followed tags list.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/following"</span> \
+  -X POST \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "tag": "Jyp4oapa9271"
+  }'</span>
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>POST https://api.doujinshi.info/v1/following</code></p>
+<h2 id="unfollow-tag">Unfollow Tag</h2>
+<p>Unfollows a tag from a user&#39;s followed tags list.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/following"</span> \
+  -X DELETE \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "tag": "Jyp4oapa9271"
+  }'</span>
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>DELETE https://api.doujinshi.info/v1/following</code></p>
+<h1 id="notifications">Notifications</h1>
+<h2 id="get-user-s-notifications">Get User&#39;s Notifications</h2>
+<p>Returns the authenticated user&#39;s notification list.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/notifications"</span> \
+  -X GET \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{
+  "<span class="hljs-attribute">meta</span>":<span class="hljs-value">{
+    "<span class="hljs-attribute">total</span>":<span class="hljs-value"><span class="hljs-number">23</span></span>,
+    "<span class="hljs-attribute">per_page</span>":<span class="hljs-value"><span class="hljs-number">24</span></span>,
+    "<span class="hljs-attribute">current_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">last_page</span>":<span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">next_page_url</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">data</span>":<span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"Z3lAm5nJ4oyx"</span></span>,
+      "<span class="hljs-attribute">type</span>":<span class="hljs-value"><span class="hljs-string">"new_doujin"</span></span>,
+      "<span class="hljs-attribute">user</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">name</span>":<span class="hljs-value"><span class="hljs-string">"Kisuka"</span></span>,
+          "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"kisuka"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">sender</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+      "<span class="hljs-attribute">book</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"qJKb6ak1mZGY"</span></span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+          "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"PSM・2淫忍修行"</span></span>,
+          "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"PSM2 In Nin Shugyou"</span></span>,
+          "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"ParM SpeciaL 02 Indecent Ninja Training"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"psm2-in-nin-shugyou"</span></span>,
+        "<span class="hljs-attribute">date_released</span>":<span class="hljs-value"><span class="hljs-string">"2018-08-13"</span></span>,
+        "<span class="hljs-attribute">pages</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+        "<span class="hljs-attribute">price</span>":<span class="hljs-value"><span class="hljs-literal">null</span></span>,
+        "<span class="hljs-attribute">is_adult</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_copybook</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_anthology</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_novel</span>":<span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-08-13 03:14:32"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-08-13 03:14:32"</span></span>,
+        "<span class="hljs-attribute">cover</span>":<span class="hljs-value"><span class="hljs-string">"https://cdn.doujinshi.info/images/2018-09-03/xqgCZX7Gsnp3cU-cover.jpg"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">tag</span>":<span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"JYB3my1emXqG"</span></span>,
+        "<span class="hljs-attribute">type</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">id</span>":<span class="hljs-value"><span class="hljs-string">"oWYqmql9lJPj"</span></span>,
+            "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+                "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"シリーズ"</span></span>,
+                "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"shirizu"</span></span>,
+                "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-string">"Series"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"series"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>":<span class="hljs-value">{
+            "<span class="hljs-attribute">japanese</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+            "<span class="hljs-attribute">romaji</span>":<span class="hljs-value"><span class="hljs-string">"NARUTO"</span></span>,
+            "<span class="hljs-attribute">english</span>":<span class="hljs-value"><span class="hljs-literal">null</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">slug</span>":<span class="hljs-value"><span class="hljs-string">"naruto"</span></span>,
+        "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span></span>,
+        "<span class="hljs-attribute">updated_at</span>":<span class="hljs-value"><span class="hljs-string">"2017-01-29 09:09:44"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">is_read</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>,
+      "<span class="hljs-attribute">created_at</span>":<span class="hljs-value"><span class="hljs-string">"2018-08-13 03:14:37"</span>
+    </span>},
+  ]
+</span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/notifications</code></p>
+<h2 id="get-unread-count">Get Unread Count</h2>
+<p>Gets the amount of notifications which are currently unread by the user.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/notifications/count"</span> \
+  -X GET \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{"<span class="hljs-attribute">data</span>":<span class="hljs-value"><span class="hljs-number">0</span></span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>GET https://api.doujinshi.info/v1/notifications/count</code></p>
+<h2 id="mark-notification-as-read">Mark Notification as Read</h2>
+<p>Changes the notification&#39;s unread status to read.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/notifications/read"</span> \
+  -X PUT \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span> \
+  <span class="hljs-operator">-d</span> <span class="hljs-string">'{
+    "notification": "Z3lAm5nJ4oyx"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{"<span class="hljs-attribute">data</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>PUT https://api.doujinshi.info/v1/notifications/read</code></p>
+<h2 id="mark-all-as-read">Mark All as Read</h2>
+<p>Updates all of a user&#39;s notifications to a read status.</p>
+<blockquote>
+<p>Request example</p>
+</blockquote>
+<pre><code class="highlight shell">curl <span class="hljs-string">"https://api.doujinshi.info/v1/notifications/read/all"</span> \
+  -X PUT \
+  -H <span class="hljs-string">'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhcGkuZG91amluLmxvY2FsIiwiaWF0IjoxNTM2MDQ3NDY0LCJleHAiOjE1MzYwNDgzNjQsInN1YiI6IlJaZTE0eGU2WUFiYSIsIm5hbWUiOiJLaXN1a2EiLCJzbHVnIjoia2lzdWthMSIsImlzX2FkbWluIjp0cnVlLCJpc19tb2QiOmZhbHNlfQ.e2hVMIz0lLnyl8QPdmOASywjgEQb33xTvzrQGnGvigw'</span>
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre><code class="highlight json">{"<span class="hljs-attribute">data</span>":<span class="hljs-value"><span class="hljs-literal">true</span></span>}
+</code></pre>
+<h3 id="http-request">HTTP Request</h3>
+<p><code>PUT https://api.doujinshi.info/v1/notifications/read/all</code></p>
+
+        </div>
+      <div class="dark-box">
+        <div class="lang-selector">
+            <a href="#" data-language-name="shell"> cURL</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
