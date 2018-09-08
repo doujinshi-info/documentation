@@ -1,0 +1,23 @@
+@import 'normalize';
+@import 'syntax';
+@import 'style';
+@import 'print';
+@import 'screen';
+
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.content blockquote {
+	padding: 0;
+	border-radius: 0;
+}
+
+.content blockquote > p {
+	border-top: 0;
+	border-bottom: 0;
+}
+
+.highlight {
+	white-space: pre-wrap;
+}

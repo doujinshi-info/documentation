@@ -1,0 +1,25 @@
+{
+  "name": "doujinshi-docs",
+  "version": "1.0.0",
+  "description": "Documentation generator for doujinshi.info's API.",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doujinshi-info/documentation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/doujinshi-info/documentation/issues"
+  },
+  "author": "Kisuka <kisuka@kisuka.com> (https://www.kisuka.com)",
+  "license": "gpl-3.0",
+  "devDependencies": {
+    "copyfiles": "^2.0.0",
+    "handlebars": "^4.0.11",
+    "highlight.js": "^8.7.0",
+    "marked": "^0.3.5",
+    "node-sass": "^4.9.2"
+  }
+}
