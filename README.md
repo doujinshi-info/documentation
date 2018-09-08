@@ -9,6 +9,7 @@ Doujinshi.info is an information database containing data on self-published work
 - [Node.js](https://nodejs.org/en/)
 
 ### Building
-
-	$ npm install
-	$ npm run build
+```console
+npm install
+npm run build
+```
